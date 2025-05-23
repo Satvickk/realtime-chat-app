@@ -20,14 +20,23 @@ io.on("connection", (socket) => {
   socket.emit("chat-history", messages);
 
   socket.on("send-message", (msg) => {
-    const messageData = { id: socket.id, text: msg };
+    const messageData = { id: socket.id, text: msg, type: "text" };
     messages.push(messageData);
     io.emit("receive-message", messageData);
   });
 
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-  });
+socket.on("send-message", (msg) => {
+  const messageData = { id: socket.id, ...msg, type: "text" };
+  messages.push(messageData);
+  io.emit("receive-message", messageData);
+});
+
+socket.on("send-plugin-message", (msg) => {
+  const pluginMessage = { id: socket.id, ...msg, type: "plugin" };
+  messages.push(pluginMessage);
+  io.emit("receive-message", pluginMessage);
+});
+
 });
 
 app.get("/", (req, res) => {

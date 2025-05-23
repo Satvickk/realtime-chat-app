@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 export function Login() {
   const navigate = useNavigate();
 
-  const [userName, setUserName] = useState("");
-  const [userToken, setUserToken] = useState("");
+  const [userName, setUserName] = useState("New User");
+  const [userToken, setUserToken] = useState("new-user-token");
 
   const handleUserName = (e) => setUserName(e.target.value);
   const handleUserToken = (e) => setUserToken(e.target.value);
