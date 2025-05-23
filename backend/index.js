@@ -6,7 +6,7 @@ const cors = require("cors");
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
-  cors: { origin: "*" }
+  cors: { origin: "*" },
 });
 
 app.use(cors());
@@ -20,23 +20,16 @@ io.on("connection", (socket) => {
   socket.emit("chat-history", messages);
 
   socket.on("send-message", (msg) => {
-    const messageData = { id: socket.id, text: msg, type: "text" };
+    const messageData = { id: socket.id, ...msg, type: "text" };
     messages.push(messageData);
     io.emit("receive-message", messageData);
   });
 
-socket.on("send-message", (msg) => {
-  const messageData = { id: socket.id, ...msg, type: "text" };
-  messages.push(messageData);
-  io.emit("receive-message", messageData);
-});
-
-socket.on("send-plugin-message", (msg) => {
-  const pluginMessage = { id: socket.id, ...msg, type: "plugin" };
-  messages.push(pluginMessage);
-  io.emit("receive-message", pluginMessage);
-});
-
+  socket.on("send-plugin-message", (msg) => {
+    const pluginMessage = { id: socket.id, ...msg, type: "plugin" };
+    messages.push(pluginMessage);
+    io.emit("receive-message", pluginMessage);
+  });
 });
 
 app.get("/", (req, res) => {
